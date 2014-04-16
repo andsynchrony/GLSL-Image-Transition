@@ -5,7 +5,7 @@
   <title>GLSL Transitions</title>
   <link rel="stylesheet" href="style/style.css">
   <script data-main="scripts/main" src="scripts/require.js"></script>
-  <script type="x-shader/x-fragment" id="squares">
+  <script type="x-shader/x-fragment" id="transitionShader">
 	#ifdef GL_ES
 	precision highp float;
 	#endif
@@ -24,18 +24,27 @@
 		return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 	}
 
+	vec3 desaturate(vec3 color, float amount)
+	{
+		vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), color));
+		return vec3(mix(color, gray, amount));
+	}
+
 	void main() {
 		vec2 p = gl_FragCoord.xy / resolution.xy;
 		float r = rand(floor(size * p));
 		float m = smoothstep(0.0, -smoothness, r - (progress * (1.0 + smoothness)));
-		gl_FragColor = mix(texture2D(from, p), texture2D(to, p), m);
+		vec4 c1 = texture2D(from, p);
+		vec4 c2 = texture2D(to, p);
+		c1 = vec4( desaturate(c1.rgb, clamp(4.0*progress,0.0,1.0)), c1.a);
+		gl_FragColor = mix(c1, c2, m);
 	}
 </script>
 </head>
 
 <body>
 <h1>TRANSITION!!!</h1>
-<canvas id="slideShow" width="640" height="450"></canvas>
+<canvas id="slideShow" width="960" height="540"></canvas>
 <div id="imgContainer">
 	<img class="slideShowImg" src="images/01.jpg" />
 	<img class="slideShowImg" src="images/02.jpg" />
