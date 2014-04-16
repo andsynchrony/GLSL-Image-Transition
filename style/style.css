@@ -1,7 +1,21 @@
 body {
-
+  font-family: 'Helvetica', Verdana, Arial, sans-serif;
+  font-weight: 100;
+  background-color: #000;
+  color: #fff;
+  margin: 0 auto;
 }
 
 #imgContainer {
   display: none;
+}
+
+#slideShowContainer {
+  position:relative;
+}
+
+p#slideShowText {
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
