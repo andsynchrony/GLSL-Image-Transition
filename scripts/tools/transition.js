@@ -2,17 +2,15 @@ define(['lib/glsl-transition', "text!tools/transitionShader.glsl"],
 	function( GlslTransition, transitionShader ) {
 
 	var canvas = document.getElementById("slideShow"),
-	images = document.getElementsByClassName("slideShowImg"),
-	transition = GlslTransition(canvas)(transitionShader, { size: [8, 4.5], smoothness: 1.0 }),
-	transitionDuration = 500,
-	transitionDelay = 1000,
-	transitionCallback;
+	images,
+	transitionDuration, transitionDelay, transitionCallback;
 
 	var linearEasing = function (x) { return x; };
-
-	function start( elementId, duration, delay, callback )
+	var transition = GlslTransition(canvas)(transitionShader, { size: [8, 4.5], smoothness: 1.0 });
+	function start( element, imgs, duration, delay, callback )
 	{
-		canvas = document.getElementById( elementId );
+		canvas = element;
+		images = imgs;
 		transitionDuration = duration;
 		transitionDelay = delay;
 		transitionCallback = callback;
