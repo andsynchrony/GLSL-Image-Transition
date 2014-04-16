@@ -1,15 +1,28 @@
 define(['glsl-transition'],
 	function( GlslTransition ) {
 
-	var canvas = document.getElementById("viewport");
+	var canvas = document.getElementById("slideShow"),
+	shader = document.getElementById('squares').textContent,
+	images = document.getElementsByClassName("slideShowImg"),
+	transition = GlslTransition(canvas)(shader, { size: [13, 9], smoothness: 0.5 });
 
-	var shader = document.getElementById('squares').textContent;
+	var linearEasing = function (x) { return x; };
 
-	var images = document.getElementsByClassName("slideShowImg");
+	function start()
+	{
+		loopTransition(0);
+	}
 
-	var transition = GlslTransition(canvas)(shader, { size: [13, 9], smoothness: 0.5 })
+	function loopTransition( i )
+	{
+		var i = i === images.length ? 0 : i;
+		var next = i + 1 === images.length ? 0 : i + 1;
+		transition({ from: images[i], to: images[next] }, 2000, linearEasing).then(function() {
+			return loopTransition( i+1 );
+		});
+	}
 
-	var squareTransition = function (x) { return x; };
-
-	transition({ from: images[0], to: images[1] }, 2000, squareTransition);
+	return {
+		start : start
+	};
 });
