@@ -8,27 +8,39 @@ require(['tools/transition'],
 	function(transition) {
 
 	var canvas = document.getElementById( "slideShow" );
+	var container = document.getElementById( "slideShowContainer" );
 	var images = document.getElementsByClassName("slideShowImg");
 	
-	fitToContainer(canvas);
+	var options = {
+		canvas : canvas, 			// the canvas to draw in
+		images : images,			// an array of image elements
+		width : 1280,				// width the images should be resized to
+		height : 720,				// height the images should be resized to
+		tileWidth : 100,			// custom shader attribute: size of the tiles for the transition shader
+		tileHeight : 100,			// custom shader attribute: size of the tiles for the transition shader
+		duration : 2400,			// transition duration
+		delay : 3000,				// transition delay
+		callback : changeElement	// function to be called when new transition starts
+	}
 
-	// start transition with target canvas, duration, delay and callback function
-	transition.start( canvas, images, 2400, 3000, changeElement );
+	// start transition loop
+	transition.start( options );
+
+	// resizes slideshow to the given dimensions
+	transition.resize(container.offsetWidth, container.offsetHeight);
 
 	// do something awesome here as soon as image transition starts.
-	function changeElement( i )
+	function changeElement( imageNum )
 	{
-		var title = document.getElementsByClassName("imgTitle")[i].innerHTML;
+		var title = document.getElementsByClassName("imgTitle")[imageNum].innerHTML;
 		document.getElementById("slideShowText").innerHTML = title;
-		//document.getElementById("slideShowText").innerHTML = "This is image " + i;
 	}
-	// from http://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
-	function fitToContainer(canvas){
-		// Make it visually fill the positioned parent
-		canvas.style.width ='100%';
-		canvas.style.height='100%';
-		// ...then set the internal size to match
-		canvas.width  = canvas.offsetWidth;
-		canvas.height = canvas.offsetHeight;
-	}
+
+	// add your favourite listening behavior here
+	window.addEventListener('resize', function()
+	{
+		// resizes slideshow to the given dimensions
+		transition.resize(container.offsetWidth, container.offsetHeight);
+    }, true);
+
 });
