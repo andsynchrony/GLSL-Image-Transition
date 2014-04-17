@@ -8361,7 +8361,7 @@ function GlslTransition (canvas, opts) {
     }
 
     function syncViewport () {
-      var w = 600 /*canvas.width*/, h = 500/*canvas.height*/;
+      var w = canvas.width, h = canvas.height;
       gl.viewport(0, 0, w, h);
       if (currentShader) {
         currentShader.uniforms[RESOLUTION_UNIFORM] = [ w, h ];
@@ -8388,7 +8388,6 @@ function GlslTransition (canvas, opts) {
         gl.activeTexture(gl.TEXTURE0 + i);
         gl.bindTexture(gl.TEXTURE_2D, texture);
         syncTexture(texture, value);
-        console.log("image: " + value.width + " " + value.height);
         shader.uniforms[name] = i;
       }
       else {
