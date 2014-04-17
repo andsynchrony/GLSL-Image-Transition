@@ -13,6 +13,9 @@ define(
 				} else if (curH >= maxH) {
 					curH = maxH * ratio;
 					curW = maxH;
+				} else {
+					curH = maxH;
+					curW = maxW;
 				}
 				return {
 					width: curW,
