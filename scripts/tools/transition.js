@@ -9,20 +9,21 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
         fitToContainer(canvas, container, canvasWidth, canvasHeight);
     }, true);
 
-	function start( element, parent, imgs, width, height, duration, delay, callback )
+	function start( options )
 	{
-		canvas = element;
-		container = parent;
-		transition = GlslTransition(canvas)(transitionShader, { size: [8, 4.5], smoothness: 1.0 });
-		transitionDuration = duration;
-		transitionDelay = delay;
-		transitionCallback = callback;
+		canvas = options.canvas;
+		container = options.container;
+		transitionDuration = options.duration;
+		transitionDelay = options.delay;
+		transitionCallback = options.callback;
 
-		canvasWidth = width;
-		canvasHeight = height;
+		canvasWidth = options.width;
+		canvasHeight = options.height;
+
+		transition = GlslTransition(canvas)(transitionShader, { size: [8, 4.5], smoothness: 1.0 });
 
 		// wait for the images to be scaled, then start the loop.
-		scaleImage.scaleImages(imgs, width, height, startLoop);
+		scaleImage.scaleImages(options.images, options.width, options.height, startLoop);
 	}
 
 	function startLoop( scaledImages )
@@ -52,9 +53,6 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		var divWidth = parent.offsetWidth;
 		var divHeight = parent.offsetHeight;
 
-		console.log( divWidth + " " + divHeight );
-
-
 		var canvasRatio = canvasWidth / canvasHeight;
 		var divRatio = divWidth / divHeight;
 
@@ -69,10 +67,6 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 			curH = divHeight;
 		}
 
-		// Make it visually fill the positioned parent
-		canvas.style.width =curW+'px';
-		canvas.style.height=curH+'px';
-
 		// tolerant browser window needs some tolerance.
 		if( curW + 50 > divWidth )
 		{
@@ -83,10 +77,11 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 			canvas.style.top = '-'+((curH - divHeight)/2)+'px';
 		}
 
-		// ...then set the internal size to match
+		canvas.style.width =curW+'px';
+		canvas.style.height=curH+'px';
+
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
-
 	}
 
 	return {
