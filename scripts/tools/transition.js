@@ -49,8 +49,10 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		var curW = canvasWidth;
 		var curH = canvasHeight;
 
-		var divWidth = parseInt(parent.offsetWidth);
-		var divHeight = parseInt(parent.offsetHeight);
+		var divWidth = parent.offsetWidth;
+		var divHeight = parent.offsetHeight;
+
+		console.log( divWidth + " " + divHeight );
 
 
 		var canvasRatio = canvasWidth / canvasHeight;
@@ -67,13 +69,19 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 			curH = divHeight;
 		}
 
-		console.log( "======================" );
-
-		console.log( curW + " // " + curH );
-
 		// Make it visually fill the positioned parent
 		canvas.style.width =curW+'px';
 		canvas.style.height=curH+'px';
+
+		// tolerant browser window needs some tolerance.
+		if( curW + 50 > divWidth )
+		{
+			canvas.style.left = '-'+((curW - divWidth)/2)+'px';
+		}
+		if( curH + 50 > divHeight )
+		{
+			canvas.style.top = '-'+((curH - divHeight)/2)+'px';
+		}
 
 		// ...then set the internal size to match
 		canvas.width  = canvas.offsetWidth;
