@@ -3,6 +3,7 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 
 	var canvas, transition, images, transitionDuration, transitionDelay, transitionCallback;
 	var canvasWidth, canvasHeight;
+	var tileWidth, tileHeight, numTilesX, numTilesY;
 	var linearEasing = function (x) { return x; };
 
 
@@ -16,7 +17,14 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		canvasWidth = options.width;
 		canvasHeight = options.height;
 
-		transition = GlslTransition(canvas)(transitionShader, { size: [16, 9], smoothness: 1.0 });
+		tileWidth = options.tileWidth;
+		tileHeight = options.tileHeight;
+		numTilesX = (canvasWidth/tileWidth);
+		numTilesY = (canvasHeight/tileHeight);
+
+		tileHeight = options.tileHeight;
+
+		transition = GlslTransition(canvas)(transitionShader, { size: [numTilesX, numTilesY], smoothness: 1.0 });
 
 		// wait for the images to be scaled, then start the loop.
 		scaleImage.scaleImages(options.images, options.width, options.height, startLoop);
@@ -37,6 +45,7 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		var next = i + 1 === images.length ? 0 : i + 1;
 		transition({ from: images[i], to: images[next] }, transitionDuration, linearEasing).delay(transitionDelay).then(function()
 		{
+			transition = GlslTransition(canvas)(transitionShader, { size: [numTilesX, numTilesY], smoothness: 1.0 });
 			return loopTransition( i + 1 );
 		});
 	}
@@ -76,7 +85,10 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 
 	function resize(width, height)
 	{
+
 		transition.reset();
+		numTilesX = (width/tileWidth);
+		numTilesY = (height/tileHeight);
         fitToContainer(canvas, width, height, canvasWidth, canvasHeight);
 	}
 

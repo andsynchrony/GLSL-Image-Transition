@@ -16,6 +16,8 @@ require(['tools/transition'],
 		images : images,			// an array of image elements
 		width : 1280,				// width the images should be resized to
 		height : 720,				// height the images should be resized to
+		tileWidth : 100,			// custom shader attribute: size of the tiles for the transition shader
+		tileHeight : 100,			// custom shader attribute: size of the tiles for the transition shader
 		duration : 2400,			// transition duration
 		delay : 3000,				// transition delay
 		callback : changeElement	// function to be called when new transition starts
@@ -28,9 +30,9 @@ require(['tools/transition'],
 	transition.resize(container.offsetWidth, container.offsetHeight);
 
 	// do something awesome here as soon as image transition starts.
-	function changeElement( i )
+	function changeElement( imageNum )
 	{
-		var title = document.getElementsByClassName("imgTitle")[i].innerHTML;
+		var title = document.getElementsByClassName("imgTitle")[imageNum].innerHTML;
 		document.getElementById("slideShowText").innerHTML = title;
 	}
 
