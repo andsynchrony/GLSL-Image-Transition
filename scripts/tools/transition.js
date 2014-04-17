@@ -1,22 +1,14 @@
 define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader.glsl"],
 	function( scaleImage, GlslTransition, transitionShader ) {
 
-	var canvas, container, transition, images, transitionDuration, transitionDelay, transitionCallback;
+	var canvas, transition, images, transitionDuration, transitionDelay, transitionCallback;
 	var canvasWidth, canvasHeight;
 	var linearEasing = function (x) { return x; };
-
-
-	window.addEventListener('resize', function()
-	{
-		transition.reset();
-        fitToContainer(canvas, container, canvasWidth, canvasHeight);
-    }, true);
 
 
 	function start( options )
 	{
 		canvas = options.canvas;
-		container = options.container;
 		transitionDuration = options.duration;
 		transitionDelay = options.delay;
 		transitionCallback = options.callback;
@@ -33,7 +25,6 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 	function startLoop( scaledImages )
 	{
 		images = scaledImages;
-		fitToContainer(canvas, container, canvasWidth, canvasHeight);
 
 		// start the transition loop.
 		loopTransition(0);
@@ -50,12 +41,12 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		});
 	}
 
-	function fitToContainer(canvas, parent, canvasWidth, canvasHeight)
+	function fitToContainer(canvas, width, height, canvasWidth, canvasHeight)
 	{
 		var curW = canvasWidth;
 		var curH = canvasHeight;
-		var divWidth = parent.offsetWidth;
-		var divHeight = parent.offsetHeight;
+		var divWidth = width;
+		var divHeight = height;
 		var canvasRatio = canvasWidth / canvasHeight;
 		var divRatio = divWidth / divHeight;
 		if (divRatio >= canvasRatio)
@@ -83,7 +74,14 @@ define([ 'tools/scaleImage', 'lib/glsl-transition', "text!tools/transitionShader
 		canvas.height = canvas.offsetHeight;
 	}
 
+	function resize(width, height)
+	{
+		transition.reset();
+        fitToContainer(canvas, width, height, canvasWidth, canvasHeight);
+	}
+
 	return {
-		start : start
+		start : start,
+		resize : resize
 	};
 });

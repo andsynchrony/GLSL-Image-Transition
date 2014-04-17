@@ -13,7 +13,6 @@ require(['tools/transition'],
 	
 	var options = {
 		canvas : canvas, 			// the canvas to draw in
-		container : container,		// parent div for scaling, resizing, etc.
 		images : images,			// an array of image elements
 		width : 1280,				// width the images should be resized to
 		height : 720,				// height the images should be resized to
@@ -22,7 +21,11 @@ require(['tools/transition'],
 		callback : changeElement	// function to be called when new transition starts
 	}
 
+	// start transition loop
 	transition.start( options );
+
+	// resizes slideshow to the given dimensions
+	transition.resize(container.offsetWidth, container.offsetHeight);
 
 	// do something awesome here as soon as image transition starts.
 	function changeElement( i )
@@ -30,4 +33,12 @@ require(['tools/transition'],
 		var title = document.getElementsByClassName("imgTitle")[i].innerHTML;
 		document.getElementById("slideShowText").innerHTML = title;
 	}
+
+	// add your favourite listening behavior here
+	window.addEventListener('resize', function()
+	{
+		// resizes slideshow to the given dimensions
+		transition.resize(container.offsetWidth, container.offsetHeight);
+    }, true);
+
 });
