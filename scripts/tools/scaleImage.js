@@ -1,12 +1,13 @@
+/*global define*/
 define(
-	[
-	],
 	function()
 	{
-		function scaleImages( images, dstWidth, dstHeight, callback )
+		function scaleImages ( images, dstWidth, dstHeight, callback )
 		{
-			var scaledAspect = function(maxW, maxH, curW, curH) {
+			function scaledAspect ( maxW, maxH, curW, curH )
+			{
 				var ratio = curH / curW;
+				
 				if (curW >= maxW && ratio <= 1) {
 					curW = maxW / ratio;
 					curH = maxW;
@@ -21,19 +22,20 @@ define(
 					width: curW,
 					height: curH
 				};
-			};
+			}
 
 			var newImages = [];
 
-			function finished() {
+			function finished ()
+			{
 				callback( newImages );
 			}
 
-			function scale( images, i, dstWidth, dstHeight )
+			function scale ( images, i, dstWidth, dstHeight )
 			{
-
 				var image = new Image();
-				image.onload = function() {  
+				image.onload = function ()
+				{
 					// init the canvas
 					var canvas = document.createElement('canvas');
 					canvas.width = dstWidth;
@@ -49,10 +51,15 @@ define(
 					// notify the url to the caller
 					newImages[i] = canvas;
 					
-					if( i < images.length-1 )
-						scale( images, i+1, dstWidth, dstHeight );
+					if ( i < images.length - 1 )
+					{
+						scale( images, i + 1, dstWidth, dstHeight );
+					}
+					
 					else
+					{
 						finished();
+					}
 				};
 				image.src = images[i].src;
 			}
